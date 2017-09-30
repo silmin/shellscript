@@ -1,0 +1,23 @@
+#!/bin/sh
+
+usage_exit() {
+  echo "Usage: $0 [-o runfile] file ..." 1>&2
+}
+
+while getopts :o:h OPT
+do
+  case $OPT in
+    o) gcc -o $2 $3 && ./$2 
+       shift $(($OPTIND - 1))
+       exit ;;
+    h) echo "[help]"
+       usage_exit
+       shift $(($OPTIND - 1))
+       exit ;;
+    *) usage_exit
+       shift $(($OPTIND - 1))
+       exit ;;
+  esac
+done
+
+gcc $1 && ./a.out
