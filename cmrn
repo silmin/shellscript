@@ -4,10 +4,17 @@ usage_exit() {
   echo "Usage: $0 [-o runfile] file ..." 1>&2
 }
 
+fext="${1##*.}"
+
 while getopts :o:h OPT
 do
   case $OPT in
-    o) gcc -o $2 $3 && ./$2 
+    o) fext="${3##*.}"
+       if [ "x$fext" = "xc" ]; then 
+         gcc -o $2 $3 && ./$2 
+       else if [ "x$fext" = "xcpp" ]; then
+         g++ -o $2 $3 && ./$2
+       fi fi
        shift $(($OPTIND - 1))
        exit ;;
     h) echo "[help]"
@@ -20,4 +27,8 @@ do
   esac
 done
 
-gcc $1 && ./a.out
+if [ "x$fext" = "xc" ]; then
+  gcc $1 && ./a.out
+else if [ "x$fext" = "xcpp" ]; then
+  g++ $1 && ./a.out
+fi fi
